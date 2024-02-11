@@ -1,0 +1,82 @@
+{% extends '@WebProfiler/Profiler/layout.html.twig' %}
+
+{% block toolbar %}
+    {% set profiler_markup_version = profiler_markup_version|default(1) %}
+
+    {% if collector.callCount %}
+        {% if collector.errorCount %}
+            {% set color = 'red' %}
+        {% else %}
+            {% set color = 'green' %}
+        {% endif %}
+        {% set status_color = collector.errorCount ? 'red' : (collector.hasSlowResponses() ? 'yellow' : 'normal') %}
+
+        {% set icon %}
+            {# Symfony <2.8 toolbar #}
+            {% if profiler_markup_version == 1 %}
+                {{ include("@ParadiseSecurityGuzzle/Icons/logo.svg.twig") }}
+                <span class="sf-toolbar-status sf-toolbar-status-{{ color }}">
+                    {{ collector.callCount }}
+                </span>
+            {% else %}
+                {{ include("@ParadiseSecurityGuzzle/Icons/logo.svg.twig") }}
+                <span class="sf-toolbar-value">
+                   {{ collector.callCount }}
+                </span>
+            {% endif %}
+        {% endset %}
+
+        {% set text %}
+            <div class="sf-toolbar-info-piece">
+                <b>API Calls</b>
+                <span class="sf-toolbar-status">{{ collector.callCount }}</span>
+            </div>
+
+            <div class="sf-toolbar-info-piece">
+                <b>Total time</b>
+                {% if collector.totalTime > 1.0 %}
+                    <span>{{ '%0.2f'|format(collector.totalTime) }} s</span>
+                {% else %}
+                    <span>{{ '%0.0f'|format(collector.totalTime * 1000) }} ms</span>
+                {% endif %}
+            </div>
+        {% endset %}
+
+        {% include "@WebProfiler/Profiler/toolbar_item.html.twig" with { "link": profiler_url, status: status_color } %}
+    {% endif %}
+{% endblock %}
+
+{% block menu %}
+    {% if collector.callCount %}
+        {% set label_class = collector.errorCount ? 'label-status-error' : (collector.hasSlowResponses() ? 'label-status-warning' : '') %}
+    {% else %}
+        {% set label_class = 'disabled' %}
+    {% endif %}
+    <span class="label {{ label_class }}">
+        <span class="icon">
+            {{ include("@ParadiseSecurityGuzzle/Icons/logo.svg.twig") }}
+        </span>
+
+        <strong>Guzzle</strong>
+
+        {% if collector.callCount > 0 %}
+            <span class="count">
+                <span>{{ collector.callCount }}</span>
+            </span>
+        {% endif %}
+    </span>
+{% endblock %}
+
+{% block head %}
+    {{ parent() }}
+
+    <style type="text/css">
+        {% include '@ParadiseSecurityGuzzle/main.css.twig' %}
+    </style>
+{% endblock %}
+
+{% block panel %}
+    <h2>Logs</h2>
+
+    {% include '@ParadiseSecurityGuzzle/profiler.html.twig' with { 'collector': collector } %}
+{% endblock %}

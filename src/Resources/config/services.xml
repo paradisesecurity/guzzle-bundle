@@ -1,0 +1,24 @@
+<?xml version="1.0" ?>
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+        <!-- classes -->
+        <parameter key="paradise_security_guzzle.http_client.class">GuzzleHttp\Client</parameter>
+        <parameter key="paradise_security_guzzle.formatter.class">GuzzleHttp\MessageFormatter</parameter>
+        <parameter key="paradise_security_guzzle.symfony_log_formatter.class">GuzzleHttp\MessageFormatter</parameter>
+        <parameter key="paradise_security_guzzle.data_collector.class">ParadiseSecurity\Bundle\GuzzleBundle\DataCollector\HttpDataCollector</parameter>
+        <parameter key="paradise_security_guzzle.logger.class">ParadiseSecurity\Bundle\GuzzleBundle\Log\Logger</parameter>
+
+        <!-- middlewares -->
+        <parameter key="paradise_security_guzzle.middleware.log.class">ParadiseSecurity\Bundle\GuzzleBundle\Middleware\LogMiddleware</parameter>
+        <parameter key="paradise_security_guzzle.middleware.profile.class">ParadiseSecurity\Bundle\GuzzleBundle\Middleware\ProfileMiddleware</parameter>
+        <parameter key="paradise_security_guzzle.middleware.event_dispatcher.class">ParadiseSecurity\Bundle\GuzzleBundle\Middleware\EventDispatchMiddleware</parameter>
+        <parameter key="paradise_security_guzzle.middleware.request_time.class">ParadiseSecurity\Bundle\GuzzleBundle\Middleware\RequestTimeMiddleware</parameter>
+        <parameter key="paradise_security_guzzle.middleware.symfony_log.class">ParadiseSecurity\Bundle\GuzzleBundle\Middleware\SymfonyLogMiddleware</parameter>
+
+        <!-- parameters -->
+        <parameter key="paradise_security_guzzle.symfony_log_formatter.pattern">{method} {uri} {code}</parameter>
+    </parameters>
+</container>
